@@ -1,0 +1,458 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		4597E21F15D84DE400101F5C /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4597E21E15D84DE400101F5C /* Cocoa.framework */; };
+		4597E22915D84DE400101F5C /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4597E22715D84DE400101F5C /* InfoPlist.strings */; };
+		4597E22B15D84DE400101F5C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4597E22A15D84DE400101F5C /* main.m */; };
+		4597E22F15D84DE400101F5C /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 4597E22D15D84DE400101F5C /* Credits.rtf */; };
+		4597E23215D84DE400101F5C /* JYAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4597E23115D84DE400101F5C /* JYAppDelegate.m */; };
+		4597E23515D84DE400101F5C /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4597E23315D84DE400101F5C /* MainMenu.xib */; };
+		4597E23D15D84DE400101F5C /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4597E23C15D84DE400101F5C /* SenTestingKit.framework */; };
+		4597E23E15D84DE400101F5C /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4597E21E15D84DE400101F5C /* Cocoa.framework */; };
+		4597E24615D84DE400101F5C /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4597E24415D84DE400101F5C /* InfoPlist.strings */; };
+		4597E24915D84DE400101F5C /* AppDotNotifyTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 4597E24815D84DE400101F5C /* AppDotNotifyTests.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		4597E23F15D84DE400101F5C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4597E21115D84DE400101F5C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4597E21915D84DE400101F5C;
+			remoteInfo = AppDotNotify;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		4597E21A15D84DE400101F5C /* AppDotNotify.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AppDotNotify.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		4597E21E15D84DE400101F5C /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		4597E22115D84DE400101F5C /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		4597E22215D84DE400101F5C /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		4597E22315D84DE400101F5C /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		4597E22615D84DE400101F5C /* AppDotNotify-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "AppDotNotify-Info.plist"; sourceTree = "<group>"; };
+		4597E22815D84DE400101F5C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		4597E22A15D84DE400101F5C /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		4597E22C15D84DE400101F5C /* AppDotNotify-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AppDotNotify-Prefix.pch"; sourceTree = "<group>"; };
+		4597E22E15D84DE400101F5C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
+		4597E23015D84DE400101F5C /* JYAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JYAppDelegate.h; sourceTree = "<group>"; };
+		4597E23115D84DE400101F5C /* JYAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JYAppDelegate.m; sourceTree = "<group>"; };
+		4597E23415D84DE400101F5C /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		4597E23B15D84DE400101F5C /* AppDotNotifyTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AppDotNotifyTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
+		4597E23C15D84DE400101F5C /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
+		4597E24315D84DE400101F5C /* AppDotNotifyTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "AppDotNotifyTests-Info.plist"; sourceTree = "<group>"; };
+		4597E24515D84DE400101F5C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		4597E24715D84DE400101F5C /* AppDotNotifyTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDotNotifyTests.h; sourceTree = "<group>"; };
+		4597E24815D84DE400101F5C /* AppDotNotifyTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDotNotifyTests.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		4597E21715D84DE400101F5C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4597E21F15D84DE400101F5C /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4597E23715D84DE400101F5C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4597E23D15D84DE400101F5C /* SenTestingKit.framework in Frameworks */,
+				4597E23E15D84DE400101F5C /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		4597E20F15D84DE400101F5C = {
+			isa = PBXGroup;
+			children = (
+				4597E22415D84DE400101F5C /* AppDotNotify */,
+				4597E24115D84DE400101F5C /* AppDotNotifyTests */,
+				4597E21D15D84DE400101F5C /* Frameworks */,
+				4597E21B15D84DE400101F5C /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		4597E21B15D84DE400101F5C /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				4597E21A15D84DE400101F5C /* AppDotNotify.app */,
+				4597E23B15D84DE400101F5C /* AppDotNotifyTests.octest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		4597E21D15D84DE400101F5C /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				4597E21E15D84DE400101F5C /* Cocoa.framework */,
+				4597E23C15D84DE400101F5C /* SenTestingKit.framework */,
+				4597E22015D84DE400101F5C /* Other Frameworks */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		4597E22015D84DE400101F5C /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				4597E22115D84DE400101F5C /* AppKit.framework */,
+				4597E22215D84DE400101F5C /* CoreData.framework */,
+				4597E22315D84DE400101F5C /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		4597E22415D84DE400101F5C /* AppDotNotify */ = {
+			isa = PBXGroup;
+			children = (
+				4597E23015D84DE400101F5C /* JYAppDelegate.h */,
+				4597E23115D84DE400101F5C /* JYAppDelegate.m */,
+				4597E23315D84DE400101F5C /* MainMenu.xib */,
+				4597E22515D84DE400101F5C /* Supporting Files */,
+			);
+			path = AppDotNotify;
+			sourceTree = "<group>";
+		};
+		4597E22515D84DE400101F5C /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				4597E22615D84DE400101F5C /* AppDotNotify-Info.plist */,
+				4597E22715D84DE400101F5C /* InfoPlist.strings */,
+				4597E22A15D84DE400101F5C /* main.m */,
+				4597E22C15D84DE400101F5C /* AppDotNotify-Prefix.pch */,
+				4597E22D15D84DE400101F5C /* Credits.rtf */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		4597E24115D84DE400101F5C /* AppDotNotifyTests */ = {
+			isa = PBXGroup;
+			children = (
+				4597E24715D84DE400101F5C /* AppDotNotifyTests.h */,
+				4597E24815D84DE400101F5C /* AppDotNotifyTests.m */,
+				4597E24215D84DE400101F5C /* Supporting Files */,
+			);
+			path = AppDotNotifyTests;
+			sourceTree = "<group>";
+		};
+		4597E24215D84DE400101F5C /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				4597E24315D84DE400101F5C /* AppDotNotifyTests-Info.plist */,
+				4597E24415D84DE400101F5C /* InfoPlist.strings */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		4597E21915D84DE400101F5C /* AppDotNotify */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4597E24C15D84DE400101F5C /* Build configuration list for PBXNativeTarget "AppDotNotify" */;
+			buildPhases = (
+				4597E21615D84DE400101F5C /* Sources */,
+				4597E21715D84DE400101F5C /* Frameworks */,
+				4597E21815D84DE400101F5C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = AppDotNotify;
+			productName = AppDotNotify;
+			productReference = 4597E21A15D84DE400101F5C /* AppDotNotify.app */;
+			productType = "com.apple.product-type.application";
+		};
+		4597E23A15D84DE400101F5C /* AppDotNotifyTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4597E24F15D84DE400101F5C /* Build configuration list for PBXNativeTarget "AppDotNotifyTests" */;
+			buildPhases = (
+				4597E23615D84DE400101F5C /* Sources */,
+				4597E23715D84DE400101F5C /* Frameworks */,
+				4597E23815D84DE400101F5C /* Resources */,
+				4597E23915D84DE400101F5C /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				4597E24015D84DE400101F5C /* PBXTargetDependency */,
+			);
+			name = AppDotNotifyTests;
+			productName = AppDotNotifyTests;
+			productReference = 4597E23B15D84DE400101F5C /* AppDotNotifyTests.octest */;
+			productType = "com.apple.product-type.bundle";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		4597E21115D84DE400101F5C /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				CLASSPREFIX = JY;
+				LastUpgradeCheck = 0440;
+				ORGANIZATIONNAME = "James Yopp";
+			};
+			buildConfigurationList = 4597E21415D84DE400101F5C /* Build configuration list for PBXProject "AppDotNotify" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 4597E20F15D84DE400101F5C;
+			productRefGroup = 4597E21B15D84DE400101F5C /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				4597E21915D84DE400101F5C /* AppDotNotify */,
+				4597E23A15D84DE400101F5C /* AppDotNotifyTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		4597E21815D84DE400101F5C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4597E22915D84DE400101F5C /* InfoPlist.strings in Resources */,
+				4597E22F15D84DE400101F5C /* Credits.rtf in Resources */,
+				4597E23515D84DE400101F5C /* MainMenu.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4597E23815D84DE400101F5C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4597E24615D84DE400101F5C /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		4597E23915D84DE400101F5C /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		4597E21615D84DE400101F5C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4597E22B15D84DE400101F5C /* main.m in Sources */,
+				4597E23215D84DE400101F5C /* JYAppDelegate.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4597E23615D84DE400101F5C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4597E24915D84DE400101F5C /* AppDotNotifyTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		4597E24015D84DE400101F5C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4597E21915D84DE400101F5C /* AppDotNotify */;
+			targetProxy = 4597E23F15D84DE400101F5C /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		4597E22715D84DE400101F5C /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				4597E22815D84DE400101F5C /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		4597E22D15D84DE400101F5C /* Credits.rtf */ = {
+			isa = PBXVariantGroup;
+			children = (
+				4597E22E15D84DE400101F5C /* en */,
+			);
+			name = Credits.rtf;
+			sourceTree = "<group>";
+		};
+		4597E23315D84DE400101F5C /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				4597E23415D84DE400101F5C /* en */,
+			);
+			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+		4597E24415D84DE400101F5C /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				4597E24515D84DE400101F5C /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		4597E24A15D84DE400101F5C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		4597E24B15D84DE400101F5C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		4597E24D15D84DE400101F5C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "AppDotNotify/AppDotNotify-Prefix.pch";
+				INFOPLIST_FILE = "AppDotNotify/AppDotNotify-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		4597E24E15D84DE400101F5C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "AppDotNotify/AppDotNotify-Prefix.pch";
+				INFOPLIST_FILE = "AppDotNotify/AppDotNotify-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		4597E25015D84DE400101F5C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/AppDotNotify.app/Contents/MacOS/AppDotNotify";
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = "\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "AppDotNotify/AppDotNotify-Prefix.pch";
+				INFOPLIST_FILE = "AppDotNotifyTests/AppDotNotifyTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Debug;
+		};
+		4597E25115D84DE400101F5C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/AppDotNotify.app/Contents/MacOS/AppDotNotify";
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = "\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "AppDotNotify/AppDotNotify-Prefix.pch";
+				INFOPLIST_FILE = "AppDotNotifyTests/AppDotNotifyTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		4597E21415D84DE400101F5C /* Build configuration list for PBXProject "AppDotNotify" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4597E24A15D84DE400101F5C /* Debug */,
+				4597E24B15D84DE400101F5C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4597E24C15D84DE400101F5C /* Build configuration list for PBXNativeTarget "AppDotNotify" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4597E24D15D84DE400101F5C /* Debug */,
+				4597E24E15D84DE400101F5C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		4597E24F15D84DE400101F5C /* Build configuration list for PBXNativeTarget "AppDotNotifyTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4597E25015D84DE400101F5C /* Debug */,
+				4597E25115D84DE400101F5C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 4597E21115D84DE400101F5C /* Project object */;
+}
