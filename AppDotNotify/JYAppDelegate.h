@@ -13,6 +13,5 @@
 }
 
 @property (assign) IBOutlet NSWindow *window;
-@property NSString* apiKey;
 
 @end

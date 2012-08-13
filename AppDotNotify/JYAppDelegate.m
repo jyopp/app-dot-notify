@@ -19,10 +19,13 @@
 }
 
 @property (nonatomic) NSString *lastMentionId;
+@property (nonatomic) NSString *apiKey;
 
 @end
 
 @implementation JYAppDelegate
+
+@synthesize lastMentionId = _lastMentionId, apiKey = _apiKey;
 
 - (void) awakeFromNib {
 }
@@ -45,7 +48,7 @@
 	[statusItem setMenu:statusMenu];
 	// Check the presence of the API key.
 	NSString *storedKey = [[NSUserDefaults standardUserDefaults] objectForKey:@"api_key"];
-	if ([storedKey length] < 20) {
+	if (!self.apiKey) {
 		[self authenticate];
 		[statusItem setImage:[NSImage imageNamed:@"status_error.png"]];
 	} else {
@@ -112,14 +115,41 @@
 #pragma mark - Persistent Properties
 
 - (void) setLastMentionId:(NSString *)lastMentionId {
-	[[NSUserDefaults standardUserDefaults] setObject:lastMentionId forKey:@"last_mention"];
-	[[NSUserDefaults standardUserDefaults] synchronize];
+	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+	_lastMentionId = lastMentionId;
+	if (lastMentionId) {
+		[defaults setObject:lastMentionId forKey:@"last_mention"];
+	} else {
+		[defaults removeObjectForKey:@"last_mention"];
+	}
+	[defaults synchronize];
 }
 
 - (NSString*) lastMentionId {
-	NSString *rVal = [[NSUserDefaults standardUserDefaults] stringForKey:@"last_mention"] ?: @"0";
-	NSLog(@"Using lastMentionId %@", rVal);
-	return rVal;
+	if (!_lastMentionId) {
+		_lastMentionId = [[NSUserDefaults standardUserDefaults] stringForKey:@"last_mention"] ?: @"0";
+		NSLog(@"Read lastMentionId %@", _lastMentionId);
+	}
+	return _lastMentionId;
+}
+
+- (void) setApiKey:(NSString *)apiKey {
+	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+	_apiKey = apiKey;
+	if (apiKey) {
+		[defaults setObject:apiKey forKey:@"api_key"];
+	} else {
+		[defaults removeObjectForKey:@"api_key"];
+	}
+	[defaults synchronize];
+}
+
+- (NSString*) apiKey {
+	if (!_apiKey) {
+		_apiKey = [[NSUserDefaults standardUserDefaults] stringForKey:@"api_key"];
+		NSLog(@"Read API Key %@", _apiKey);
+	}
+	return _apiKey;
 }
 
 #pragma mark - Timers
@@ -153,18 +183,20 @@
 
 - (void) startTimer
 {
+	static const dispatch_time_t interval = 15ull * NSEC_PER_SEC;
+	static const dispatch_time_t jitter = 9000ull;
 	if (!timer) {
 		__block dispatch_time_t lastFired = dispatch_walltime(NULL, 0);
 		timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0));
 		
 		dispatch_source_set_event_handler(timer, ^{
 			dispatch_time_t t = dispatch_walltime(NULL, 0);
-			if ((t - lastFired) >= 15ull * NSEC_PER_SEC) {
+			if ((t - lastFired) >= (interval - jitter)) {
 				[self check];
 				lastFired = t;
 			}
 		});
-		dispatch_source_set_timer(timer, DISPATCH_TIME_NOW, 15ull * NSEC_PER_SEC, 9000ull);
+		dispatch_source_set_timer(timer, DISPATCH_TIME_NOW, interval, jitter);
 	}
 	if (timer) dispatch_resume(timer);
 }
@@ -186,15 +218,17 @@
 	NSError *error = nil;
 	NSData *remoteContent = [NSURLConnection sendSynchronousRequest:r returningResponse:&response error:&error];
 	if (error == nil) {
-		NSLog(@"Got response %@", response);
 		NSInteger lastMention = [self.lastMentionId integerValue];
 		NSArray *jsonData = [NSJSONSerialization JSONObjectWithData:remoteContent options:0 error:&error];
 		if (error == nil) {
-			NSLog(@"Got %ld Mentions", jsonData.count);
+			
 			NSString *newestId = jsonData[0][@"id"];
-			if (newestId) {
+			if (newestId > self.lastMentionId) {
 				self.lastMentionId = newestId;
+			} else {
+				NSLog(@"No new mentions");
 			}
+
 			for (NSDictionary *mention in jsonData) {
 				NSString *text = mention[@"text"];
 				NSString *user = mention[@"user"][@"name"];
@@ -208,6 +242,7 @@
 					});
 				}
 			}
+			
 		} else {
 			NSLog(@"ERROR parsing JSON: %@", error);
 			[self stopTimer];
