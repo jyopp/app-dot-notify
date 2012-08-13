@@ -154,29 +154,66 @@
 
 #pragma mark - Timers
 
+- (id) getJSONForAPIRequest: (NSURLRequest*)request
+{
+	BOOL mustReauthenticate = NO;
+	NSURLResponse *response = nil;
+	NSError *error = nil;
+	NSData *remoteContent = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
+	if (error == nil) {
+		if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
+			NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse*)response;
+			switch ([httpResponse statusCode]) {
+				case 200: {
+					id jsonData = [NSJSONSerialization JSONObjectWithData:remoteContent options:0 error:&error];
+					if (!error) {
+						return jsonData;
+					}
+				}
+					break;
+				case 404:
+					break;
+				case 403:
+					mustReauthenticate = YES;
+					break;
+				default:
+					break;
+				
+			}
+		}
+		NSDictionary *jsonData = [NSJSONSerialization JSONObjectWithData:remoteContent options:0 error:&error];
+		if (error == nil) {
+			userName = jsonData[@"username"];
+			userRealName = jsonData[@"name"];
+			userId = jsonData[@"id"];
+			NSLog(@"I know who you are! %@ / %@ (%@)", userName, userRealName, userId);
+			[self startTimer];
+		} else {
+			NSLog(@"ERROR parsing JSON: %@", error);
+		}
+	} else {
+		NSLog(@"ERROR getting content: %@", error);
+	}
+	if (mustReauthenticate) {
+		[self performSelectorOnMainThread:@selector(authenticate) withObject:nil waitUntilDone:NO];
+	}
+	return nil;
+}
+
 - (void) getUserData
 {
 	NSURL *pollURL = [NSURL URLWithString:@"stream/0/users/me" relativeToURL:[NSURL URLWithString:@"https://alpha-api.app.net"]];
 	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
 		NSMutableURLRequest *r = [[NSMutableURLRequest alloc] initWithURL:pollURL cachePolicy:NSURLCacheStorageNotAllowed timeoutInterval:15.0];
 		[r setAllHTTPHeaderFields:@{ @"Authorization": [NSString stringWithFormat:@"Bearer %@", self.apiKey] }];
-		NSURLResponse *response = nil;
-		NSError *error = nil;
-		NSData *remoteContent = [NSURLConnection sendSynchronousRequest:r returningResponse:&response error:&error];
-		if (error == nil) {
-			NSDictionary *jsonData = [NSJSONSerialization JSONObjectWithData:remoteContent options:0 error:&error];
-			if (error == nil) {
-				userName = jsonData[@"username"];
-				userRealName = jsonData[@"name"];
-				userId = jsonData[@"id"];
-				NSLog(@"I know who you are! %@ / %@ (%@)", userName, userRealName, userId);
-				[self startTimer];
-			} else {
-				NSLog(@"ERROR parsing JSON: %@", error);
-			}
-		} else {
-			NSLog(@"ERROR getting content: %@", error);
-			[self authenticate];
+		
+		NSDictionary *jsonData = [self getJSONForAPIRequest:r];
+		if (jsonData) {
+			userName = jsonData[@"username"];
+			userRealName = jsonData[@"name"];
+			userId = jsonData[@"id"];
+			NSLog(@"I know who you are! %@ / %@ (%@)", userName, userRealName, userId);
+			[self startTimer];
 		}
 	});
 }
@@ -214,41 +251,31 @@
 	NSMutableURLRequest *r = [[NSMutableURLRequest alloc] initWithURL:pollURL cachePolicy:NSURLCacheStorageNotAllowed timeoutInterval:15.0];
 	[r setAllHTTPHeaderFields:@{ @"Authorization": [NSString stringWithFormat:@"Bearer %@", self.apiKey],
 								 @"min_id": self.lastMentionId }];
-	NSURLResponse *response = nil;
-	NSError *error = nil;
-	NSData *remoteContent = [NSURLConnection sendSynchronousRequest:r returningResponse:&response error:&error];
-	if (error == nil) {
-		NSInteger lastMention = [self.lastMentionId integerValue];
-		NSArray *jsonData = [NSJSONSerialization JSONObjectWithData:remoteContent options:0 error:&error];
-		if (error == nil) {
-			
-			NSString *newestId = jsonData[0][@"id"];
-			if (newestId > self.lastMentionId) {
-				self.lastMentionId = newestId;
-			} else {
-				NSLog(@"No new mentions");
-			}
-
-			for (NSDictionary *mention in jsonData) {
-				NSString *text = mention[@"text"];
-				NSString *user = mention[@"user"][@"name"];
-				NSString *username = mention[@"user"][@"username"];
-				NSString *postId = mention[@"id"];
-				if (postId && ([postId integerValue] > lastMention)) {
-					NSString *postURLString = [NSString stringWithFormat:@"https://alpha.app.net/%@/post/%@", username, postId];
-					dispatch_async(dispatch_get_main_queue(), ^{
-						[self showMessageForUser:user body:text url:postURLString];
-						NSLog(@"[%@] Mentioned by %@: %@", postId, user, text);
-					});
-				}
-			}
-			
+	
+	NSInteger lastMention = [self.lastMentionId integerValue];
+	NSArray *jsonData = [self getJSONForAPIRequest:r];
+	if (jsonData) {
+		
+		NSString *newestId = jsonData[0][@"id"];
+		if ([newestId compare:self.lastMentionId options:NSNumericSearch] > 0) {
+			self.lastMentionId = newestId;
 		} else {
-			NSLog(@"ERROR parsing JSON: %@", error);
-			[self stopTimer];
+			NSLog(@"No new mentions (%lu in list)", jsonData.count);
 		}
-	} else {
-		NSLog(@"ERROR getting content: %@", error);
+		
+		for (NSDictionary *mention in jsonData) {
+			NSString *text = mention[@"text"];
+			NSString *user = mention[@"user"][@"name"];
+			NSString *username = mention[@"user"][@"username"];
+			NSString *postId = mention[@"id"];
+			if (postId && ([postId integerValue] > lastMention)) {
+				NSString *postURLString = [NSString stringWithFormat:@"https://alpha.app.net/%@/post/%@", username, postId];
+				dispatch_async(dispatch_get_main_queue(), ^{
+					[self showMessageForUser:user body:text url:postURLString];
+					NSLog(@"[%@] Mentioned by %@: %@", postId, user, text);
+				});
+			}
+		}
 		[self stopTimer];
 	}
 }
