@@ -179,7 +179,7 @@
 					mustReauthenticate = YES;
 					break;
 				default:
-					NSLog(@"Got unusable response: %@", [httpResponse debugDescription]);
+					NSLog(@"Got unusable response: %lu", [httpResponse statusCode]);
 					break;
 				
 			}
