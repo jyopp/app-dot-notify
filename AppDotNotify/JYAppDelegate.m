@@ -87,7 +87,7 @@
 - (void) showMessageForUser: (NSString*)username body:(NSString*)body url:(NSString*)postURL
 {
 	NSUserNotification *note = [[NSUserNotification alloc] init];
-	note.title = [NSString stringWithFormat:@"@%@ on app.net:", username];
+	note.title = [NSString stringWithFormat:@"%@ on app.net:", username];
 	note.informativeText = body;
 	note.actionButtonTitle = @"Reply";
 	note.userInfo = @{ @"url" : (postURL ?: @"https://alpha.app.net") };
