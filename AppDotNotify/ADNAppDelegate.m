@@ -47,13 +47,11 @@
 	[statusItem setHighlightMode:YES];
 	[statusItem setMenu:statusMenu];
 	// Check the presence of the API key.
-	NSString *storedKey = [[NSUserDefaults standardUserDefaults] objectForKey:@"api_key"];
-	if (!self.apiKey) {
-		[self authenticate];
-		[statusItem setImage:[NSImage imageNamed:@"status_error.png"]];
-	} else {
-		self.apiKey = storedKey;
+	if ([self.apiKey length]) {
 		[self getUserData];
+	} else {
+		[statusItem setImage:[NSImage imageNamed:@"status_error.png"]];
+		[self authenticate];
 	}
 }
 
@@ -75,8 +73,6 @@
 	NSRange tkIdRange = [url rangeOfString:@"#access_token="];
 	if (tkIdRange.location != NSNotFound) {
 		self.apiKey = [url substringFromIndex:NSMaxRange(tkIdRange)];
-		[[NSUserDefaults standardUserDefaults] setObject:self.apiKey forKey:@"api_key"];
-		[[NSUserDefaults standardUserDefaults] synchronize];
 		[statusItem setImage:[NSImage imageNamed:@"status_icon.png"]];
 		[self getUserData];
 	}
