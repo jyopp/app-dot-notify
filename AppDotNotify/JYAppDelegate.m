@@ -181,16 +181,6 @@
 				
 			}
 		}
-		NSDictionary *jsonData = [NSJSONSerialization JSONObjectWithData:remoteContent options:0 error:&error];
-		if (error == nil) {
-			userName = jsonData[@"username"];
-			userRealName = jsonData[@"name"];
-			userId = jsonData[@"id"];
-			NSLog(@"I know who you are! %@ / %@ (%@)", userName, userRealName, userId);
-			[self startTimer];
-		} else {
-			NSLog(@"ERROR parsing JSON: %@", error);
-		}
 	} else {
 		NSLog(@"ERROR getting content: %@", error);
 	}
