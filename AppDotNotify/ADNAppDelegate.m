@@ -112,6 +112,11 @@
 	}
 }
 
+- (BOOL)userNotificationCenter:(NSUserNotificationCenter *)center shouldPresentNotification:(NSUserNotification *)notification
+{
+	return !notification.isPresented;
+}
+
 #pragma mark - Persistent Properties
 
 - (void) setLastMentionId:(NSString *)lastMentionId {
