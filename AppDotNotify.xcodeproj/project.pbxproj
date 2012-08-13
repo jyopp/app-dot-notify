@@ -11,7 +11,7 @@
 		4597E22915D84DE400101F5C /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4597E22715D84DE400101F5C /* InfoPlist.strings */; };
 		4597E22B15D84DE400101F5C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4597E22A15D84DE400101F5C /* main.m */; };
 		4597E22F15D84DE400101F5C /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 4597E22D15D84DE400101F5C /* Credits.rtf */; };
-		4597E23215D84DE400101F5C /* JYAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4597E23115D84DE400101F5C /* JYAppDelegate.m */; };
+		4597E23215D84DE400101F5C /* ADNAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4597E23115D84DE400101F5C /* ADNAppDelegate.m */; };
 		4597E23515D84DE400101F5C /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4597E23315D84DE400101F5C /* MainMenu.xib */; };
 		4597E23D15D84DE400101F5C /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4597E23C15D84DE400101F5C /* SenTestingKit.framework */; };
 		4597E23E15D84DE400101F5C /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4597E21E15D84DE400101F5C /* Cocoa.framework */; };
@@ -42,8 +42,8 @@
 		4597E22A15D84DE400101F5C /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		4597E22C15D84DE400101F5C /* AppDotNotify-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AppDotNotify-Prefix.pch"; sourceTree = "<group>"; };
 		4597E22E15D84DE400101F5C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
-		4597E23015D84DE400101F5C /* JYAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JYAppDelegate.h; sourceTree = "<group>"; };
-		4597E23115D84DE400101F5C /* JYAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JYAppDelegate.m; sourceTree = "<group>"; };
+		4597E23015D84DE400101F5C /* ADNAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADNAppDelegate.h; sourceTree = "<group>"; };
+		4597E23115D84DE400101F5C /* ADNAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ADNAppDelegate.m; sourceTree = "<group>"; };
 		4597E23415D84DE400101F5C /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		4597E23B15D84DE400101F5C /* AppDotNotifyTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AppDotNotifyTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4597E23C15D84DE400101F5C /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
@@ -118,8 +118,8 @@
 		4597E22415D84DE400101F5C /* AppDotNotify */ = {
 			isa = PBXGroup;
 			children = (
-				4597E23015D84DE400101F5C /* JYAppDelegate.h */,
-				4597E23115D84DE400101F5C /* JYAppDelegate.m */,
+				4597E23015D84DE400101F5C /* ADNAppDelegate.h */,
+				4597E23115D84DE400101F5C /* ADNAppDelegate.m */,
 				4597E23315D84DE400101F5C /* MainMenu.xib */,
 				4597E22515D84DE400101F5C /* Supporting Files */,
 			);
@@ -204,7 +204,7 @@
 		4597E21115D84DE400101F5C /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				CLASSPREFIX = JY;
+				CLASSPREFIX = ADN;
 				LastUpgradeCheck = 0440;
 				ORGANIZATIONNAME = "James Yopp";
 			};
@@ -271,7 +271,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4597E22B15D84DE400101F5C /* main.m in Sources */,
-				4597E23215D84DE400101F5C /* JYAppDelegate.m in Sources */,
+				4597E23215D84DE400101F5C /* ADNAppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -451,6 +451,7 @@
 				4597E24E15D84DE400101F5C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		4597E24F15D84DE400101F5C /* Build configuration list for PBXNativeTarget "AppDotNotifyTests" */ = {
 			isa = XCConfigurationList;
@@ -459,6 +460,7 @@
 				4597E25115D84DE400101F5C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

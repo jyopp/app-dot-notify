@@ -1,5 +1,5 @@
 //
-//  JYAppDelegate.h
+//  ADNAppDelegate.h
 //  AppDotNotify
 //
 //  Created by James Yopp on 2012/08/12.
@@ -8,7 +8,7 @@
 
 #import <Cocoa/Cocoa.h>
 
-@interface JYAppDelegate : NSObject <NSApplicationDelegate, NSUserNotificationCenterDelegate> {
+@interface ADNAppDelegate : NSObject <NSApplicationDelegate, NSUserNotificationCenterDelegate> {
 	IBOutlet NSMenu *statusMenu;
 }
 

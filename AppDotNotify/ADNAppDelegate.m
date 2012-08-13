@@ -1,14 +1,14 @@
 //
-//  JYAppDelegate.m
+//  ADNAppDelegate.m
 //  AppDotNotify
 //
 //  Created by James Yopp on 2012/08/12.
 //  Copyright (c) 2012年 James Yopp. All rights reserved.
 //
 
-#import "JYAppDelegate.h"
+#import "ADNAppDelegate.h"
 
-@interface JYAppDelegate () {
+@interface ADNAppDelegate () {
 	NSStatusItem *statusItem;
 	
 	dispatch_source_t timer;
@@ -23,7 +23,7 @@
 
 @end
 
-@implementation JYAppDelegate
+@implementation ADNAppDelegate
 
 @synthesize lastMentionId = _lastMentionId, apiKey = _apiKey;
 
