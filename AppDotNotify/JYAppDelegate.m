@@ -276,7 +276,6 @@
 				});
 			}
 		}
-		[self stopTimer];
 	}
 }
 
