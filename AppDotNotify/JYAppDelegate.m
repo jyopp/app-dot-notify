@@ -97,6 +97,7 @@
 	switch (notification.activationType) {
 		case NSUserNotificationActivationTypeActionButtonClicked:
 			NSLog(@"Reply Button was clicked -> quick reply");
+			[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:notification.userInfo[@"url"]]];
 			break;
 		case NSUserNotificationActivationTypeContentsClicked:
 			NSLog(@"Notification body was clicked -> redirect to item");
