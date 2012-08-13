@@ -172,11 +172,14 @@
 				}
 					break;
 				case 404:
+					NSLog(@"Not Found!");
 					break;
 				case 403:
+					NSLog(@"Unauthorized!");
 					mustReauthenticate = YES;
 					break;
 				default:
+					NSLog(@"Got unusable response: %@", [httpResponse debugDescription]);
 					break;
 				
 			}
