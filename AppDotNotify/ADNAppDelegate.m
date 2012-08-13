@@ -249,7 +249,7 @@
 	
 	NSInteger lastMention = [self.lastMentionId integerValue];
 	NSArray *jsonData = [self getJSONForAPIRequest:r];
-	if (jsonData) {
+	if ([jsonData count] > 0) {
 		
 		NSString *newestId = jsonData[0][@"id"];
 		if ([newestId compare:self.lastMentionId options:NSNumericSearch] > 0) {
@@ -271,6 +271,8 @@
 				});
 			}
 		}
+	} else {
+		NSLog(@"No mentions in timeline");
 	}
 }
 
