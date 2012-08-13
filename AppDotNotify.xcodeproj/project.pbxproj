@@ -17,6 +17,8 @@
 		4597E23E15D84DE400101F5C /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4597E21E15D84DE400101F5C /* Cocoa.framework */; };
 		4597E24615D84DE400101F5C /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4597E24415D84DE400101F5C /* InfoPlist.strings */; };
 		4597E24915D84DE400101F5C /* AppDotNotifyTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 4597E24815D84DE400101F5C /* AppDotNotifyTests.m */; };
+		4597E25315D8736C00101F5C /* status_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 4597E25215D8736C00101F5C /* status_icon.png */; };
+		4597E25515D87B1E00101F5C /* status_error.png in Resources */ = {isa = PBXBuildFile; fileRef = 4597E25415D87B1E00101F5C /* status_error.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +51,8 @@
 		4597E24515D84DE400101F5C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		4597E24715D84DE400101F5C /* AppDotNotifyTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDotNotifyTests.h; sourceTree = "<group>"; };
 		4597E24815D84DE400101F5C /* AppDotNotifyTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDotNotifyTests.m; sourceTree = "<group>"; };
+		4597E25215D8736C00101F5C /* status_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = status_icon.png; sourceTree = "<group>"; };
+		4597E25415D87B1E00101F5C /* status_error.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = status_error.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -125,6 +129,8 @@
 		4597E22515D84DE400101F5C /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				4597E25215D8736C00101F5C /* status_icon.png */,
+				4597E25415D87B1E00101F5C /* status_error.png */,
 				4597E22615D84DE400101F5C /* AppDotNotify-Info.plist */,
 				4597E22715D84DE400101F5C /* InfoPlist.strings */,
 				4597E22A15D84DE400101F5C /* main.m */,
@@ -228,6 +234,8 @@
 				4597E22915D84DE400101F5C /* InfoPlist.strings in Resources */,
 				4597E22F15D84DE400101F5C /* Credits.rtf in Resources */,
 				4597E23515D84DE400101F5C /* MainMenu.xib in Resources */,
+				4597E25315D8736C00101F5C /* status_icon.png in Resources */,
+				4597E25515D87B1E00101F5C /* status_error.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -8,8 +8,11 @@
 
 #import <Cocoa/Cocoa.h>
 
-@interface JYAppDelegate : NSObject <NSApplicationDelegate>
+@interface JYAppDelegate : NSObject <NSApplicationDelegate, NSUserNotificationCenterDelegate> {
+	IBOutlet NSMenu *statusMenu;
+}
 
 @property (assign) IBOutlet NSWindow *window;
+@property NSString* apiKey;
 
 @end
