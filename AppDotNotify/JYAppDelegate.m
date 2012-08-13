@@ -156,6 +156,7 @@
 
 - (id) getJSONForAPIRequest: (NSURLRequest*)request
 {
+	[[NSURLCache sharedURLCache] removeCachedResponseForRequest:request];
 	BOOL mustReauthenticate = NO;
 	NSURLResponse *response = nil;
 	NSError *error = nil;
