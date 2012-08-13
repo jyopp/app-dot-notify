@@ -10,9 +10,9 @@
 
 @interface ADNAppDelegate () {
 	NSStatusItem *statusItem;
-	
+
 	dispatch_source_t timer;
-	
+
 	NSNumber *userId;
 	NSString *userName;
 	NSString *userRealName;
@@ -183,7 +183,7 @@
 				default:
 					NSLog(@"Got unusable response: %lu", [httpResponse statusCode]);
 					break;
-				
+
 			}
 		}
 	} else {
@@ -201,7 +201,7 @@
 	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
 		NSMutableURLRequest *r = [[NSMutableURLRequest alloc] initWithURL:pollURL cachePolicy:NSURLCacheStorageNotAllowed timeoutInterval:15.0];
 		[r setAllHTTPHeaderFields:@{ @"Authorization": [NSString stringWithFormat:@"Bearer %@", self.apiKey] }];
-		
+
 		NSDictionary *jsonData = [self getJSONForAPIRequest:r];
 		if (jsonData) {
 			userName = jsonData[@"username"];
@@ -220,7 +220,7 @@
 	if (!timer) {
 		__block dispatch_time_t lastFired = dispatch_walltime(NULL, 0);
 		timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0));
-		
+
 		dispatch_source_set_event_handler(timer, ^{
 			dispatch_time_t t = dispatch_walltime(NULL, 0);
 			if ((t - lastFired) >= (interval - jitter)) {
@@ -245,32 +245,34 @@
 							relativeToURL:[NSURL URLWithString:@"https://alpha-api.app.net"]];
 	NSMutableURLRequest *r = [[NSMutableURLRequest alloc] initWithURL:pollURL cachePolicy:NSURLCacheStorageNotAllowed timeoutInterval:15.0];
 	[r setAllHTTPHeaderFields:@{ @"Authorization": [NSString stringWithFormat:@"Bearer %@", self.apiKey],
-								 @"min_id": self.lastMentionId }];
-	
+     @"min_id": self.lastMentionId }];
+
 	NSInteger lastMention = [self.lastMentionId integerValue];
 	NSArray *jsonData = [self getJSONForAPIRequest:r];
 	if (jsonData) {
-		
-		NSString *newestId = jsonData[0][@"id"];
-		if ([newestId compare:self.lastMentionId options:NSNumericSearch] > 0) {
-			self.lastMentionId = newestId;
-		} else {
-			NSLog(@"No new mentions (%lu in list)", jsonData.count);
-		}
-		
-		for (NSDictionary *mention in jsonData) {
-			NSString *text = mention[@"text"];
-			NSString *user = mention[@"user"][@"name"];
-			NSString *username = mention[@"user"][@"username"];
-			NSString *postId = mention[@"id"];
-			if (postId && ([postId integerValue] > lastMention)) {
-				NSString *postURLString = [NSString stringWithFormat:@"https://alpha.app.net/%@/post/%@", username, postId];
-				dispatch_async(dispatch_get_main_queue(), ^{
-					[self showMessageForUser:user body:text url:postURLString];
-					NSLog(@"[%@] Mentioned by %@: %@", postId, user, text);
-				});
-			}
-		}
+
+        if([jsonData count] > 0) {
+            NSString *newestId = jsonData[0][@"id"];
+            if ([newestId compare:self.lastMentionId options:NSNumericSearch] > 0) {
+                self.lastMentionId = newestId;
+            } else {
+                NSLog(@"No new mentions (%lu in list)", jsonData.count);
+            }
+
+            for (NSDictionary *mention in jsonData) {
+                NSString *text = mention[@"text"];
+                NSString *user = mention[@"user"][@"name"];
+                NSString *username = mention[@"user"][@"username"];
+                NSString *postId = mention[@"id"];
+                if (postId && ([postId integerValue] > lastMention)) {
+                    NSString *postURLString = [NSString stringWithFormat:@"https://alpha.app.net/%@/post/%@", username, postId];
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [self showMessageForUser:user body:text url:postURLString];
+                        NSLog(@"[%@] Mentioned by %@: %@", postId, user, text);
+                    });
+                }
+            }
+        }
 	}
 }
 
