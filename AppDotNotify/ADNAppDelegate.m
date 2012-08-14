@@ -8,6 +8,8 @@
 
 #import "ADNAppDelegate.h"
 
+static dispatch_queue_t serialAPIQueue;
+
 @interface ADNAppDelegate () {
 	NSStatusItem *statusItem;
 	
@@ -28,6 +30,10 @@
 @synthesize lastMentionId = _lastMentionId, apiKey = _apiKey;
 
 - (void) awakeFromNib {
+}
+
++ (void) initialize {
+	serialAPIQueue = dispatch_queue_create("com.jyopp.appdotnotify.serial-api-net", DISPATCH_QUEUE_SERIAL);
 }
 
 - (void) applicationWillFinishLaunching:(NSNotification *)notification {
@@ -198,7 +204,7 @@
 - (void) getUserData
 {
 	NSURL *pollURL = [NSURL URLWithString:@"stream/0/users/me" relativeToURL:[NSURL URLWithString:@"https://alpha-api.app.net"]];
-	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+	dispatch_async(serialAPIQueue, ^{
 		NSMutableURLRequest *r = [[NSMutableURLRequest alloc] initWithURL:pollURL cachePolicy:NSURLCacheStorageNotAllowed timeoutInterval:15.0];
 		[r setAllHTTPHeaderFields:@{ @"Authorization": [NSString stringWithFormat:@"Bearer %@", self.apiKey] }];
 		
@@ -219,7 +225,7 @@
 	static const dispatch_time_t jitter = 9000ull;
 	if (!timer) {
 		__block dispatch_time_t lastFired = dispatch_walltime(NULL, 0);
-		timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0));
+		timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, serialAPIQueue);
 		
 		dispatch_source_set_event_handler(timer, ^{
 			dispatch_time_t t = dispatch_walltime(NULL, 0);
