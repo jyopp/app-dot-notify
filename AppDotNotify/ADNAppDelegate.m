@@ -408,7 +408,10 @@ static dispatch_queue_t serialAPIQueue;
 			if (postId && ([postId integerValue] > lastStream)) {
 				NSString *postURLString = [NSString stringWithFormat:@"https://alpha.app.net/%@/post/%@", username, postId];
 				dispatch_async(dispatch_get_main_queue(), ^{
-					[self showMessageForUser:user body:text url:postURLString isMention:NO];
+					if (text) {
+						// Deleted posts seem to have nil text.
+						[self showMessageForUser:user body:text url:postURLString isMention:NO];
+					}
 					NSLog(@"[%@] Post by %@: %@", postId, user, text);
 				});
 			}
@@ -446,7 +449,10 @@ static dispatch_queue_t serialAPIQueue;
 			if (postId && ([postId integerValue] > lastMention)) {
 				NSString *postURLString = [NSString stringWithFormat:@"https://alpha.app.net/%@/post/%@", username, postId];
 				dispatch_async(dispatch_get_main_queue(), ^{
-					[self showMessageForUser:user body:text url:postURLString isMention:YES];
+					if (text) {
+						// Deleted posts seem to have nil text
+						[self showMessageForUser:user body:text url:postURLString isMention:YES];
+					}
 					NSLog(@"[%@] Mentioned by %@: %@", postId, user, text);
 				});
 			}
