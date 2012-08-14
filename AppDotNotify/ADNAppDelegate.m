@@ -48,11 +48,15 @@ static dispatch_queue_t serialAPIQueue;
 
 + (void) initialize {
 	serialAPIQueue = dispatch_queue_create("com.jyopp.appdotnotify.serial-api-net", DISPATCH_QUEUE_SERIAL);
+	[[NSUserDefaults standardUserDefaults] registerDefaults: @{
+	 @"check_mentions" : @YES,
+	 @"check_stream": @NO,
+	 @"polling_interval": @15,
+	 }];
 }
 
 - (void) applicationWillFinishLaunching:(NSNotification *)notification {
 	// Register handlers for startup events
-	[self _registerPropertyDefaults];
 	[[NSUserNotificationCenter defaultUserNotificationCenter] setDelegate:self];
 	[[NSAppleEventManager sharedAppleEventManager] setEventHandler:self
 													   andSelector:@selector(receivedURL:withReplyEvent:)
@@ -164,14 +168,6 @@ static dispatch_queue_t serialAPIQueue;
 }
 
 #pragma mark - Persistent Properties
-
-- (void) _registerPropertyDefaults {
-	[[NSUserDefaults standardUserDefaults] registerDefaults: @{
-	 @"check_mentions" : @YES,
-	 @"check_stream": @NO,
-	 @"polling_interval": @15,
-	 }];
-}
 
 - (void) setLastMentionId:(NSString *)lastMentionId {
 	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
