@@ -401,7 +401,7 @@ static dispatch_queue_t serialAPIQueue;
 		if ([newestId compare:self.lastStreamId options:NSNumericSearch] > 0) {
 			self.lastStreamId = newestId;
 		} else {
-			NSLog(@"No new posts (%lu in stream)", jsonData.count);
+//			NSLog(@"No new posts (%lu in stream)", jsonData.count);
 		}
 		
 		for (NSDictionary *mention in jsonData) {
@@ -439,7 +439,7 @@ static dispatch_queue_t serialAPIQueue;
 		if ([newestId compare:self.lastMentionId options:NSNumericSearch] > 0) {
 			self.lastMentionId = newestId;
 		} else {
-			NSLog(@"No new mentions (%lu in list)", jsonData.count);
+//			NSLog(@"No new mentions (%lu in list)", jsonData.count);
 		}
 		
 		for (NSDictionary *mention in jsonData) {
