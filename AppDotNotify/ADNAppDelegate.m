@@ -14,6 +14,8 @@ static dispatch_queue_t serialAPIQueue;
 	NSStatusItem *statusItem;
 	
 	dispatch_source_t timer;
+	BOOL timerIsActive;
+	dispatch_time_t interval;
 	
 	NSNumber *userId;
 	NSString *userName;
@@ -22,12 +24,13 @@ static dispatch_queue_t serialAPIQueue;
 
 @property (nonatomic) NSString *lastMentionId;
 @property (nonatomic) NSString *apiKey;
+@property (nonatomic) NSInteger pollingInterval;
 
 @end
 
 @implementation ADNAppDelegate
 
-@synthesize lastMentionId = _lastMentionId, apiKey = _apiKey;
+@synthesize lastMentionId = _lastMentionId, apiKey = _apiKey, pollingInterval = _pollingInterval;
 
 - (void) awakeFromNib {
 }
@@ -48,6 +51,7 @@ static dispatch_queue_t serialAPIQueue;
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
 	// Register a menu
+	[self _syncPollingIntervalMenu];
 	statusItem = [[NSStatusBar systemStatusBar] statusItemWithLength:NSSquareStatusItemLength];
 	[statusItem setImage:[NSImage imageNamed:@"status_icon.png"]];
 	[statusItem setHighlightMode:YES];
@@ -119,6 +123,19 @@ static dispatch_queue_t serialAPIQueue;
 	return !notification.isPresented;
 }
 
+#pragma mark - Menu Items
+
+- (void) _syncPollingIntervalMenu {
+	NSInteger currentInterval = self.pollingInterval;
+	for (NSMenuItem* subitem in pollingSubmenu.itemArray) {
+		subitem.state = (subitem.tag == currentInterval) ? NSOnState : NSOffState;
+	}
+}
+
+- (void) selectPollingInterval:(NSMenuItem *)sender {
+	[self setPollingInterval:sender.tag];
+}
+
 #pragma mark - Persistent Properties
 
 - (void) setLastMentionId:(NSString *)lastMentionId {
@@ -157,6 +174,27 @@ static dispatch_queue_t serialAPIQueue;
 		NSLog(@"Read API Key %@", _apiKey);
 	}
 	return _apiKey;
+}
+
+- (void) setPollingInterval:(NSInteger)pollingInterval {
+	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+	_pollingInterval = pollingInterval;
+	[defaults setInteger:pollingInterval forKey:@"polling_interval"];
+	[defaults synchronize];
+	NSLog(@"Set Polling Interval to %li seconds", pollingInterval);
+	// Update the timer's schedule if it is running
+	if (timerIsActive) {
+		[self startTimer];
+	}
+	[self _syncPollingIntervalMenu];
+}
+
+- (NSInteger) pollingInterval {
+	if (!_pollingInterval) {
+		_pollingInterval = [[NSUserDefaults standardUserDefaults] integerForKey:@"polling_interval"];
+		NSLog(@"Read Polling Interval %li", _pollingInterval);
+	}
+	return _pollingInterval ?: 15;
 }
 
 #pragma mark - Timers
@@ -219,9 +257,12 @@ static dispatch_queue_t serialAPIQueue;
 	});
 }
 
+- (dispatch_time_t) _timerInterval {
+	return (dispatch_time_t)(self.pollingInterval) * NSEC_PER_SEC;
+}
+
 - (void) startTimer
 {
-	static const dispatch_time_t interval = 15ull * NSEC_PER_SEC;
 	static const dispatch_time_t jitter = 9000ull;
 	if (!timer) {
 		__block dispatch_time_t lastFired = dispatch_walltime(NULL, 0);
@@ -229,22 +270,30 @@ static dispatch_queue_t serialAPIQueue;
 		
 		dispatch_source_set_event_handler(timer, ^{
 			dispatch_time_t t = dispatch_walltime(NULL, 0);
-			if ((t - lastFired) >= (interval - jitter)) {
-				[self check];
+			if ((t - lastFired) >= ([self _timerInterval] - jitter)) {
+				[self checkMentions];
 				lastFired = t;
 			}
 		});
-		dispatch_source_set_timer(timer, DISPATCH_TIME_NOW, interval, jitter);
 	}
-	if (timer) dispatch_resume(timer);
+	if (timer) {
+		dispatch_source_set_timer(timer, DISPATCH_TIME_NOW, [self _timerInterval], jitter);
+		if (!timerIsActive) {
+			dispatch_resume(timer);
+			timerIsActive = YES;
+		}
+	}
 }
 
 - (void) stopTimer
 {
-	if (timer) dispatch_suspend(timer);
+	if (timerIsActive) {
+		timerIsActive = NO;
+		dispatch_suspend(timer);
+	}
 }
 
-- (void) check
+- (void) checkMentions
 {
 	// This should be called on a background thread.
 	NSURL *pollURL = [NSURL URLWithString:[NSString stringWithFormat:@"stream/0/users/%@/mentions", userId]

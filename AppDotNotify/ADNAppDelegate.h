@@ -10,8 +10,9 @@
 
 @interface ADNAppDelegate : NSObject <NSApplicationDelegate, NSUserNotificationCenterDelegate> {
 	IBOutlet NSMenu *statusMenu;
+	IBOutlet NSMenu *pollingSubmenu;
 }
 
-@property (assign) IBOutlet NSWindow *window;
+- (IBAction)selectPollingInterval:(NSMenuItem*)sender;
 
 @end
