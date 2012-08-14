@@ -11,8 +11,12 @@
 @interface ADNAppDelegate : NSObject <NSApplicationDelegate, NSUserNotificationCenterDelegate> {
 	IBOutlet NSMenu *statusMenu;
 	IBOutlet NSMenu *pollingSubmenu;
+	IBOutlet NSMenuItem *mentionsMenuItem;
+	IBOutlet NSMenuItem *streamMenuItem;
 }
 
 - (IBAction)selectPollingInterval:(NSMenuItem*)sender;
+- (IBAction)toggleMentions:(id)sender;
+- (IBAction)toggleStream:(id)sender;
 
 @end

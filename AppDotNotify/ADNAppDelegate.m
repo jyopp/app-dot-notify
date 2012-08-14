@@ -20,19 +20,30 @@ static dispatch_queue_t serialAPIQueue;
 	NSNumber *userId;
 	NSString *userName;
 	NSString *userRealName;
+	
+	BOOL _doMentions_loaded;
+	BOOL _doStream_loaded;
 }
 
 @property (nonatomic) NSString *lastMentionId;
+@property (nonatomic) NSString *lastStreamId;
 @property (nonatomic) NSString *apiKey;
 @property (nonatomic) NSInteger pollingInterval;
+
+@property (nonatomic) BOOL shouldCheckMentions;
+@property (nonatomic) BOOL shouldCheckStream;
 
 @end
 
 @implementation ADNAppDelegate
 
-@synthesize lastMentionId = _lastMentionId, apiKey = _apiKey, pollingInterval = _pollingInterval;
+@synthesize lastMentionId = _lastMentionId, lastStreamId = _lastStreamId;
+@synthesize apiKey = _apiKey, pollingInterval = _pollingInterval;
+@synthesize shouldCheckMentions = _shouldCheckMentions, shouldCheckStream = _shouldCheckStream;
 
 - (void) awakeFromNib {
+	[self _syncPollingIntervalMenu];
+	[self _syncMonitoringMenuItems];
 }
 
 + (void) initialize {
@@ -41,6 +52,7 @@ static dispatch_queue_t serialAPIQueue;
 
 - (void) applicationWillFinishLaunching:(NSNotification *)notification {
 	// Register handlers for startup events
+	[self _registerPropertyDefaults];
 	[[NSUserNotificationCenter defaultUserNotificationCenter] setDelegate:self];
 	[[NSAppleEventManager sharedAppleEventManager] setEventHandler:self
 													   andSelector:@selector(receivedURL:withReplyEvent:)
@@ -51,7 +63,6 @@ static dispatch_queue_t serialAPIQueue;
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
 	// Register a menu
-	[self _syncPollingIntervalMenu];
 	statusItem = [[NSStatusBar systemStatusBar] statusItemWithLength:NSSquareStatusItemLength];
 	[statusItem setImage:[NSImage imageNamed:@"status_icon.png"]];
 	[statusItem setHighlightMode:YES];
@@ -90,13 +101,14 @@ static dispatch_queue_t serialAPIQueue;
 
 #pragma mark - Notification Center
 
-- (void) showMessageForUser: (NSString*)username body:(NSString*)body url:(NSString*)postURL
+- (void) showMessageForUser: (NSString*)username body:(NSString*)body url:(NSString*)postURL isMention:(BOOL)mentioned
 {
 	NSUserNotification *note = [[NSUserNotification alloc] init];
-	note.title = [NSString stringWithFormat:@"%@ on app.net:", username];
+	note.title = [NSString stringWithFormat: (mentioned ? @"%@ mentioned you" : @"%@"), username];
 	note.informativeText = body;
 	note.actionButtonTitle = @"Reply";
 	note.userInfo = @{ @"url" : (postURL ?: @"https://alpha.app.net") };
+	note.hasActionButton = mentioned;
 	[[NSUserNotificationCenter defaultUserNotificationCenter] deliverNotification:note];
 }
 
@@ -132,11 +144,34 @@ static dispatch_queue_t serialAPIQueue;
 	}
 }
 
+- (void) _syncMonitoringMenuItems {
+	[mentionsMenuItem setState: self.shouldCheckMentions ? NSOnState : NSOffState];
+	[streamMenuItem setState:self.shouldCheckStream ? NSOnState : NSOffState];
+}
+
 - (void) selectPollingInterval:(NSMenuItem *)sender {
 	[self setPollingInterval:sender.tag];
 }
 
+- (void) toggleMentions:(id)sender {
+	self.shouldCheckMentions = mentionsMenuItem.state != NSOnState;
+	[self _syncMonitoringMenuItems];
+}
+
+- (void) toggleStream:(id)sender {
+	self.shouldCheckStream = streamMenuItem.state != NSOnState;
+	[self _syncMonitoringMenuItems];
+}
+
 #pragma mark - Persistent Properties
+
+- (void) _registerPropertyDefaults {
+	[[NSUserDefaults standardUserDefaults] registerDefaults: @{
+	 @"check_mentions" : @YES,
+	 @"check_stream": @NO,
+	 @"polling_interval": @15,
+	 }];
+}
 
 - (void) setLastMentionId:(NSString *)lastMentionId {
 	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -155,6 +190,25 @@ static dispatch_queue_t serialAPIQueue;
 		NSLog(@"Read lastMentionId %@", _lastMentionId);
 	}
 	return _lastMentionId;
+}
+
+- (void) setLastStreamId:(NSString *)lastStreamId {
+	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+	_lastStreamId = lastStreamId;
+	if (lastStreamId) {
+		[defaults setObject:lastStreamId forKey:@"last_stream"];
+	} else {
+		[defaults removeObjectForKey:@"last_stream"];
+	}
+	[defaults synchronize];
+}
+
+- (NSString*) lastStreamId {
+	if (!_lastStreamId) {
+		_lastStreamId = [[NSUserDefaults standardUserDefaults] stringForKey:@"last_stream"] ?: @"0";
+		NSLog(@"Read lastStreamId %@", _lastStreamId);
+	}
+	return _lastStreamId;
 }
 
 - (void) setApiKey:(NSString *)apiKey {
@@ -195,6 +249,38 @@ static dispatch_queue_t serialAPIQueue;
 		NSLog(@"Read Polling Interval %li", _pollingInterval);
 	}
 	return _pollingInterval ?: 15;
+}
+
+- (BOOL) shouldCheckMentions {
+	if (!_doMentions_loaded) {
+		_doMentions_loaded = YES;
+		_shouldCheckMentions = [[NSUserDefaults standardUserDefaults] boolForKey:@"check_mentions"];
+	}
+	return _shouldCheckMentions;
+}
+
+- (void) setShouldCheckMentions:(BOOL)doMentions {
+	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+	_shouldCheckMentions = doMentions;
+	[defaults setBool:doMentions forKey:@"check_mentions"];
+	[defaults synchronize];
+	_doMentions_loaded = YES;
+}
+
+- (BOOL) shouldCheckStream {
+	if (!_doStream_loaded) {
+		_doStream_loaded = YES;
+		_shouldCheckStream = [[NSUserDefaults standardUserDefaults] boolForKey:@"check_stream"];
+	}
+	return _shouldCheckStream;
+}
+
+- (void) setShouldCheckStream:(BOOL)doStream {
+	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+	_shouldCheckStream = doStream;
+	[defaults setBool:doStream forKey:@"check_stream"];
+	[defaults synchronize];
+	_doStream_loaded = YES;
 }
 
 #pragma mark - Timers
@@ -271,7 +357,12 @@ static dispatch_queue_t serialAPIQueue;
 		dispatch_source_set_event_handler(timer, ^{
 			dispatch_time_t t = dispatch_walltime(NULL, 0);
 			if ((t - lastFired) >= ([self _timerInterval] - jitter)) {
-				[self checkMentions];
+				if (self.shouldCheckMentions) {
+					[self checkMentions];
+				}
+				if (self.shouldCheckStream) {
+					[self checkStream];
+				}
 				lastFired = t;
 			}
 		});
@@ -290,6 +381,44 @@ static dispatch_queue_t serialAPIQueue;
 	if (timerIsActive) {
 		timerIsActive = NO;
 		dispatch_suspend(timer);
+	}
+}
+
+- (void) checkStream
+{
+	// This should be called on a background thread.
+	NSURL *pollURL = [NSURL URLWithString:[NSString stringWithFormat:@"stream/0/posts/stream"]
+							relativeToURL:[NSURL URLWithString:@"https://alpha-api.app.net"]];
+	NSMutableURLRequest *r = [[NSMutableURLRequest alloc] initWithURL:pollURL cachePolicy:NSURLCacheStorageNotAllowed timeoutInterval:15.0];
+	[r setAllHTTPHeaderFields:@{ @"Authorization": [NSString stringWithFormat:@"Bearer %@", self.apiKey],
+	 @"min_id": self.lastStreamId }];
+	
+	NSInteger lastStream = [self.lastStreamId integerValue];
+	NSArray *jsonData = [self getJSONForAPIRequest:r];
+	if ([jsonData count] > 0) {
+		
+		NSString *newestId = jsonData[0][@"id"];
+		if ([newestId compare:self.lastStreamId options:NSNumericSearch] > 0) {
+			self.lastStreamId = newestId;
+		} else {
+			NSLog(@"No new posts (%lu in stream)", jsonData.count);
+		}
+		
+		for (NSDictionary *mention in jsonData) {
+			NSString *text = mention[@"text"];
+			NSString *user = mention[@"user"][@"name"];
+			NSString *username = mention[@"user"][@"username"];
+			NSString *postId = mention[@"id"];
+			if (postId && ([postId integerValue] > lastStream)) {
+				NSString *postURLString = [NSString stringWithFormat:@"https://alpha.app.net/%@/post/%@", username, postId];
+				dispatch_async(dispatch_get_main_queue(), ^{
+					[self showMessageForUser:user body:text url:postURLString isMention:NO];
+					NSLog(@"[%@] Post by %@: %@", postId, user, text);
+				});
+			}
+		}
+	} else {
+		NSLog(@"No mentions in timeline");
 	}
 }
 
@@ -321,7 +450,7 @@ static dispatch_queue_t serialAPIQueue;
 			if (postId && ([postId integerValue] > lastMention)) {
 				NSString *postURLString = [NSString stringWithFormat:@"https://alpha.app.net/%@/post/%@", username, postId];
 				dispatch_async(dispatch_get_main_queue(), ^{
-					[self showMessageForUser:user body:text url:postURLString];
+					[self showMessageForUser:user body:text url:postURLString isMention:YES];
 					NSLog(@"[%@] Mentioned by %@: %@", postId, user, text);
 				});
 			}
