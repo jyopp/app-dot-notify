@@ -17,9 +17,7 @@ static dispatch_queue_t serialAPIQueue;
 	BOOL timerIsActive;
 	dispatch_time_t interval;
 	
-	NSNumber *userId;
-	NSString *userName;
-	NSString *userRealName;
+	NSDictionary *userJSON;
 	
 	BOOL _doMentions_loaded;
 	BOOL _doStream_loaded;
@@ -27,7 +25,7 @@ static dispatch_queue_t serialAPIQueue;
 
 @property (nonatomic) NSString *lastMentionId;
 @property (nonatomic) NSString *lastStreamId;
-@property (nonatomic) NSString *apiKey;
+@property (nonatomic) NSString *authToken;
 @property (nonatomic) NSInteger pollingInterval;
 
 @property (nonatomic) BOOL shouldCheckMentions;
@@ -38,7 +36,7 @@ static dispatch_queue_t serialAPIQueue;
 @implementation ADNAppDelegate
 
 @synthesize lastMentionId = _lastMentionId, lastStreamId = _lastStreamId;
-@synthesize apiKey = _apiKey, pollingInterval = _pollingInterval;
+@synthesize authToken = _authToken, pollingInterval = _pollingInterval;
 @synthesize shouldCheckMentions = _shouldCheckMentions, shouldCheckStream = _shouldCheckStream;
 
 - (void) awakeFromNib {
@@ -72,8 +70,8 @@ static dispatch_queue_t serialAPIQueue;
 	[statusItem setHighlightMode:YES];
 	[statusItem setMenu:statusMenu];
 	// Check the presence of the API key.
-	if ([self.apiKey length]) {
-		[self getUserData];
+	if ([self.authToken length]) {
+		[self checkToken];
 	} else {
 		[statusItem setImage:[NSImage imageNamed:@"status_error.png"]];
 		[self authenticate];
@@ -97,9 +95,9 @@ static dispatch_queue_t serialAPIQueue;
 	NSString *url = [[event paramDescriptorForKeyword:keyDirectObject] stringValue];
 	NSRange tkIdRange = [url rangeOfString:@"#access_token="];
 	if (tkIdRange.location != NSNotFound) {
-		self.apiKey = [url substringFromIndex:NSMaxRange(tkIdRange)];
+		self.authToken = [url substringFromIndex:NSMaxRange(tkIdRange)];
 		[statusItem setImage:[NSImage imageNamed:@"status_icon.png"]];
-		[self getUserData];
+		[self checkToken];
 	}
 }
 
@@ -207,9 +205,9 @@ static dispatch_queue_t serialAPIQueue;
 	return _lastStreamId;
 }
 
-- (void) setApiKey:(NSString *)apiKey {
+- (void) setAuthToken:(NSString *)apiKey {
 	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-	_apiKey = apiKey;
+	_authToken = apiKey;
 	if (apiKey) {
 		[defaults setObject:apiKey forKey:@"api_key"];
 	} else {
@@ -218,12 +216,12 @@ static dispatch_queue_t serialAPIQueue;
 	[defaults synchronize];
 }
 
-- (NSString*) apiKey {
-	if (!_apiKey) {
-		_apiKey = [[NSUserDefaults standardUserDefaults] stringForKey:@"api_key"];
-		NSLog(@"Read API Key %@", _apiKey);
+- (NSString*) authToken {
+	if (!_authToken) {
+		_authToken = [[NSUserDefaults standardUserDefaults] stringForKey:@"api_key"];
+		NSLog(@"Read API Key %@", _authToken);
 	}
-	return _apiKey;
+	return _authToken;
 }
 
 - (void) setPollingInterval:(NSInteger)pollingInterval {
@@ -299,15 +297,16 @@ static dispatch_queue_t serialAPIQueue;
 					}
 				}
 					break;
-				case 404:
-					NSLog(@"Not Found!");
-					break;
 				case 403:
 					NSLog(@"Unauthorized!");
 					mustReauthenticate = YES;
 					break;
+				case 429:
+					// TODO: Read the next-available interval from the header and return nil until that time is passed.
+					NSLog(@"Got Rate Limit response.");
+					break;
 				default:
-					NSLog(@"Got unusable response: %lu", [httpResponse statusCode]);
+					NSLog(@"Got unusable response: %lu for URL %@", [httpResponse statusCode], [request.URL absoluteString]);
 					break;
 				
 			}
@@ -321,20 +320,20 @@ static dispatch_queue_t serialAPIQueue;
 	return nil;
 }
 
-- (void) getUserData
+- (void) checkToken
 {
-	NSURL *pollURL = [NSURL URLWithString:@"stream/0/users/me" relativeToURL:[NSURL URLWithString:@"https://alpha-api.app.net"]];
+	NSURL *pollURL = [NSURL URLWithString:@"stream/0/token" relativeToURL:[NSURL URLWithString:@"https://alpha-api.app.net"]];
 	dispatch_async(serialAPIQueue, ^{
 		NSMutableURLRequest *r = [[NSMutableURLRequest alloc] initWithURL:pollURL cachePolicy:NSURLCacheStorageNotAllowed timeoutInterval:15.0];
-		[r setAllHTTPHeaderFields:@{ @"Authorization": [NSString stringWithFormat:@"Bearer %@", self.apiKey] }];
+		[r setAllHTTPHeaderFields:@{ @"Authorization": [NSString stringWithFormat:@"Bearer %@", self.authToken] }];
 		
 		NSDictionary *jsonData = [self getJSONForAPIRequest:r];
 		if (jsonData) {
-			userName = jsonData[@"username"];
-			userRealName = jsonData[@"name"];
-			userId = jsonData[@"id"];
-			NSLog(@"I know who you are! %@ / %@ (%@)", userName, userRealName, userId);
-			[self startTimer];
+			userJSON = jsonData[@"user"];
+			if (userJSON) {
+				NSLog(@"I know who you are! %@ / %@ (%@)", userJSON[@"username"], userJSON[@"name"], userJSON[@"id"]);
+				[self startTimer];
+			}
 		}
 	});
 }
@@ -387,7 +386,7 @@ static dispatch_queue_t serialAPIQueue;
 										   [self.lastStreamId integerValue]]
 							relativeToURL:[NSURL URLWithString:@"https://alpha-api.app.net"]];
 	NSMutableURLRequest *r = [[NSMutableURLRequest alloc] initWithURL:pollURL cachePolicy:NSURLCacheStorageNotAllowed timeoutInterval:15.0];
-	[r setAllHTTPHeaderFields:@{ @"Authorization": [NSString stringWithFormat:@"Bearer %@", self.apiKey] }];
+	[r setAllHTTPHeaderFields:@{ @"Authorization": [NSString stringWithFormat:@"Bearer %@", self.authToken] }];
 	
 	NSInteger lastStream = [self.lastStreamId integerValue];
 	NSArray *jsonData = [self getJSONForAPIRequest:r];
@@ -424,10 +423,10 @@ static dispatch_queue_t serialAPIQueue;
 - (void) checkMentions
 {
 	// This should be called on a background thread.
-	NSURL *pollURL = [NSURL URLWithString:[NSString stringWithFormat:@"stream/0/users/%@/mentions?since_id=%ld", userId, [self.lastMentionId integerValue]]
+	NSURL *pollURL = [NSURL URLWithString:[NSString stringWithFormat:@"stream/0/users/%@/mentions?since_id=%ld", userJSON[@"id"], [self.lastMentionId integerValue]]
 							relativeToURL:[NSURL URLWithString:@"https://alpha-api.app.net"]];
 	NSMutableURLRequest *r = [[NSMutableURLRequest alloc] initWithURL:pollURL cachePolicy:NSURLCacheStorageNotAllowed timeoutInterval:15.0];
-	[r setAllHTTPHeaderFields:@{ @"Authorization": [NSString stringWithFormat:@"Bearer %@", self.apiKey] }];
+	[r setAllHTTPHeaderFields:@{ @"Authorization": [NSString stringWithFormat:@"Bearer %@", self.authToken] }];
 	
 	NSInteger lastMention = [self.lastMentionId integerValue];
 	NSArray *jsonData = [self getJSONForAPIRequest:r];
