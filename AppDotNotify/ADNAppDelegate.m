@@ -383,11 +383,11 @@ static dispatch_queue_t serialAPIQueue;
 - (void) checkStream
 {
 	// This should be called on a background thread.
-	NSURL *pollURL = [NSURL URLWithString:[NSString stringWithFormat:@"stream/0/posts/stream"]
+	NSURL *pollURL = [NSURL URLWithString:[NSString stringWithFormat:@"stream/0/posts/stream?since_id=%ld",
+										   [self.lastStreamId integerValue]]
 							relativeToURL:[NSURL URLWithString:@"https://alpha-api.app.net"]];
 	NSMutableURLRequest *r = [[NSMutableURLRequest alloc] initWithURL:pollURL cachePolicy:NSURLCacheStorageNotAllowed timeoutInterval:15.0];
-	[r setAllHTTPHeaderFields:@{ @"Authorization": [NSString stringWithFormat:@"Bearer %@", self.apiKey],
-	 @"min_id": self.lastStreamId }];
+	[r setAllHTTPHeaderFields:@{ @"Authorization": [NSString stringWithFormat:@"Bearer %@", self.apiKey] }];
 	
 	NSInteger lastStream = [self.lastStreamId integerValue];
 	NSArray *jsonData = [self getJSONForAPIRequest:r];
@@ -417,18 +417,17 @@ static dispatch_queue_t serialAPIQueue;
 			}
 		}
 	} else {
-		NSLog(@"No mentions in timeline");
+	//	NSLog(@"No new posts in timeline");
 	}
 }
 
 - (void) checkMentions
 {
 	// This should be called on a background thread.
-	NSURL *pollURL = [NSURL URLWithString:[NSString stringWithFormat:@"stream/0/users/%@/mentions", userId]
+	NSURL *pollURL = [NSURL URLWithString:[NSString stringWithFormat:@"stream/0/users/%@/mentions?since_id=%ld", userId, [self.lastMentionId integerValue]]
 							relativeToURL:[NSURL URLWithString:@"https://alpha-api.app.net"]];
 	NSMutableURLRequest *r = [[NSMutableURLRequest alloc] initWithURL:pollURL cachePolicy:NSURLCacheStorageNotAllowed timeoutInterval:15.0];
-	[r setAllHTTPHeaderFields:@{ @"Authorization": [NSString stringWithFormat:@"Bearer %@", self.apiKey],
-								 @"min_id": self.lastMentionId }];
+	[r setAllHTTPHeaderFields:@{ @"Authorization": [NSString stringWithFormat:@"Bearer %@", self.apiKey] }];
 	
 	NSInteger lastMention = [self.lastMentionId integerValue];
 	NSArray *jsonData = [self getJSONForAPIRequest:r];
@@ -458,7 +457,7 @@ static dispatch_queue_t serialAPIQueue;
 			}
 		}
 	} else {
-		NSLog(@"No mentions in timeline");
+	//	NSLog(@"No new mentions in timeline");
 	}
 }
 
