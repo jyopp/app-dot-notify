@@ -19,6 +19,9 @@
 		4597E24915D84DE400101F5C /* AppDotNotifyTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 4597E24815D84DE400101F5C /* AppDotNotifyTests.m */; };
 		4597E25315D8736C00101F5C /* status_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 4597E25215D8736C00101F5C /* status_icon.png */; };
 		4597E25515D87B1E00101F5C /* status_error.png in Resources */ = {isa = PBXBuildFile; fileRef = 4597E25415D87B1E00101F5C /* status_error.png */; };
+		45E7C1D715E19CA10012EB59 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 45E7C1D615E19CA10012EB59 /* Sparkle.framework */; };
+		45E7C1DA15E19CE40012EB59 /* Sparkle.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 45E7C1D615E19CA10012EB59 /* Sparkle.framework */; };
+		45E7C1DC15E1F39E0012EB59 /* dsa_pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = 45E7C1DB15E1F39E0012EB59 /* dsa_pub.pem */; };
 		45F4695A15DA261300DB8317 /* icon.icns in Resources */ = {isa = PBXBuildFile; fileRef = 45F4695915DA261300DB8317 /* icon.icns */; };
 /* End PBXBuildFile section */
 
@@ -31,6 +34,19 @@
 			remoteInfo = AppDotNotify;
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		45E7C1D915E19CD30012EB59 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				45E7C1DA15E19CE40012EB59 /* Sparkle.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		4597E21A15D84DE400101F5C /* AppDotNotify.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AppDotNotify.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -54,6 +70,8 @@
 		4597E24815D84DE400101F5C /* AppDotNotifyTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDotNotifyTests.m; sourceTree = "<group>"; };
 		4597E25215D8736C00101F5C /* status_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = status_icon.png; sourceTree = "<group>"; };
 		4597E25415D87B1E00101F5C /* status_error.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = status_error.png; sourceTree = "<group>"; };
+		45E7C1D615E19CA10012EB59 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Sparkle.framework; sourceTree = "<group>"; };
+		45E7C1DB15E1F39E0012EB59 /* dsa_pub.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dsa_pub.pem; sourceTree = SOURCE_ROOT; };
 		45F4695915DA261300DB8317 /* icon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = icon.icns; path = ../icon.icns; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -63,6 +81,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4597E21F15D84DE400101F5C /* Cocoa.framework in Frameworks */,
+				45E7C1D715E19CA10012EB59 /* Sparkle.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -100,6 +119,7 @@
 		4597E21D15D84DE400101F5C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				45E7C1D615E19CA10012EB59 /* Sparkle.framework */,
 				4597E21E15D84DE400101F5C /* Cocoa.framework */,
 				4597E23C15D84DE400101F5C /* SenTestingKit.framework */,
 				4597E22015D84DE400101F5C /* Other Frameworks */,
@@ -131,6 +151,7 @@
 		4597E22515D84DE400101F5C /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				45E7C1DB15E1F39E0012EB59 /* dsa_pub.pem */,
 				45F4695915DA261300DB8317 /* icon.icns */,
 				4597E25215D8736C00101F5C /* status_icon.png */,
 				4597E25415D87B1E00101F5C /* status_error.png */,
@@ -172,6 +193,7 @@
 				4597E21615D84DE400101F5C /* Sources */,
 				4597E21715D84DE400101F5C /* Frameworks */,
 				4597E21815D84DE400101F5C /* Resources */,
+				45E7C1D915E19CD30012EB59 /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -240,6 +262,7 @@
 				4597E25315D8736C00101F5C /* status_icon.png in Resources */,
 				4597E25515D87B1E00101F5C /* status_error.png in Resources */,
 				45F4695A15DA261300DB8317 /* icon.icns in Resources */,
+				45E7C1DC15E1F39E0012EB59 /* dsa_pub.pem in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -386,6 +409,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)\"",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "AppDotNotify/AppDotNotify-Prefix.pch";
 				INFOPLIST_FILE = "AppDotNotify/AppDotNotify-Info.plist";
@@ -398,6 +425,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)\"",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "AppDotNotify/AppDotNotify-Prefix.pch";
 				INFOPLIST_FILE = "AppDotNotify/AppDotNotify-Info.plist";
